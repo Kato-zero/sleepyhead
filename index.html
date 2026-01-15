@@ -3,7 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dreamy Bounce & Drift</title>
+  <title>Dreamy Bounce & Drift | Kids Sleep Aid App</title>
+
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Dreamy Bounce & Drift is a calming sleep aid for children ages 4-10. Gentle bouncing ball animations, soothing music, and customizable audio help kids fall asleep naturally.">
+  <meta name="keywords" content="kids sleep app, bedtime routine, lullabies, soothing animations, calming music, children's sleep aid, bedtime app, relaxation for kids, Dreamy Bounce & Drift">
+  <meta name="author" content="CMK Web Solutions">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph / Social Sharing -->
+  <meta property="og:title" content="Dreamy Bounce & Drift | Kids Sleep Aid App">
+  <meta property="og:description" content="Gentle bouncing ball animations and calming music for children to relax and fall asleep naturally.">
+  <meta property="og:type" content="website">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Dreamy Bounce & Drift | Kids Sleep Aid App">
+  <meta name="twitter:description" content="Calming sleep app for children with soothing visuals and music.">
+  <meta name="google-adsense-account" content="ca-pub-8646067826963918">
+
   <style>
     :root {
       --bg: #050b2e;
@@ -28,7 +46,6 @@
       position: relative;
     }
 
-    
     .star {
       position: absolute;
       width: 12px;
@@ -36,6 +53,7 @@
       background: white;
       opacity: 1;
       animation: twinkle 1s infinite ease-in-out;
+      border-radius: 50%;
     }
 
     @keyframes twinkle {
@@ -43,7 +61,6 @@
       50%{opacity:0.8}
     }
 
-    
     .ball {
       position: absolute;
       width: 80px;
@@ -134,11 +151,9 @@
     document.body.appendChild(s);
   }
 
-  
   const app = document.getElementById('app');
   const counterEl = document.getElementById('counter');
   const gravity = 0.35;
-
   let bounceCount = 1;
 
   function createBall() {
@@ -152,7 +167,7 @@
     let vx = 1.6;
     let vy = 13;
     let bounces = 0;
-    const maxBounces = 10; 
+    const maxBounces = 10;
 
     function animate() {
       vy += gravity;
@@ -219,7 +234,6 @@
   loopToggle.addEventListener('change', () => {
     audio.loop = loopToggle.checked;
   });
-
 
   const menu = document.getElementById('menu');
   document.getElementById('menuBtn').onclick = () => menu.classList.toggle('open');
