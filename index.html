@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dreamy Bounce & Drift</title>
+  <style>
+    :root {
+      --bg: #050b2e;
+      --accent: #b9a6ff;
+      --ball: #cbb7ff;
+      --text: #eef;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, #0b1a4a, var(--bg));
+      color: var(--text);
+      font-family: 'Comic Sans MS', 'Trebuchet MS', system-ui, sans-serif;
+      overflow: hidden;
+    }
+
+    #app {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+    }
+
+    
+    .star {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: white;
+      opacity: 1;
+      animation: twinkle 1s infinite ease-in-out;
+    }
+
+    @keyframes twinkle {
+      0%,100%{opacity:0.2}
+      50%{opacity:0.8}
+    }
+
+    
+    .ball {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: radial-gradient(circle, white, var(--ball));
+      box-shadow: 0 0 40px var(--ball);
+    }
+
+    #counter {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 3rem;
+      opacity: 0.8;
+    }
+
+    #menuBtn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 2rem;
+      cursor: pointer;
+    }
+
+    #menu {
+      position: absolute;
+      top: 0;
+      left: -320px;
+      width: 300px;
+      height: 100%;
+      background: rgba(5,10,40,0.95);
+      padding: 20px;
+      transition: left 0.4s ease;
+      overflow-y: auto;
+    }
+
+    #menu.open { left: 0; }
+
+    label { display:block; margin-top:1rem; font-size:0.9rem; }
+
+    input, button {
+      width: 100%;
+      margin-top: 0.4rem;
+    }
+
+    button {
+      padding: 8px;
+      background: var(--accent);
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div id="menuBtn">☰</div>
+  <div id="counter">1</div>
+
+  <div id="menu">
+    <h2>Settings</h2>
+
+    <label>Upload Your Music
+      <input type="file" id="audioUpload" accept="audio/*" />
+    </label>
+
+    <button id="playBtn" disabled>▶ Play Music</button>
+
+    <label>Volume
+      <input type="range" min="0" max="1" step="0.05" id="volume" value="0.5" />
+    </label>
+
+    <label>
+      <input type="checkbox" id="loopToggle" checked /> Loop music continuously
+    </label>
+  </div>
+</div>
+
+<script>
+  for (let i = 0; i < 80; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.style.left = Math.random() * 100 + '%';
+    s.style.top = Math.random() * 100 + '%';
+    s.style.animationDelay = Math.random() * 5 + 's';
+    document.body.appendChild(s);
+  }
+
+  
+  const app = document.getElementById('app');
+  const counterEl = document.getElementById('counter');
+  const gravity = 0.35;
+
+  let bounceCount = 1;
+
+  function createBall() {
+    const ball = document.createElement('div');
+    ball.className = 'ball';
+    app.appendChild(ball);
+
+    let x = -100;
+    const ground = window.innerHeight - 80;
+    let y = ground - 250;
+    let vx = 1.6;
+    let vy = 13;
+    let bounces = 0;
+    const maxBounces = 10; 
+
+    function animate() {
+      vy += gravity;
+      x += vx;
+      y += vy;
+
+      if (y >= ground && bounces < maxBounces) {
+        y = ground;
+        vy *= -0.85;
+        bounces++;
+        bounceCount++;
+        counterEl.textContent = bounceCount;
+      }
+
+      if (bounces >= maxBounces) {
+        vy = 0;
+        y = ground;
+      }
+
+      ball.style.transform = `translate(${x}px, ${y}px)`;
+
+      if (x > window.innerWidth + 120) {
+        ball.remove();
+        createBall();
+        return;
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  }
+
+  createBall();
+
+  const audio = new Audio();
+  const uploadInput = document.getElementById('audioUpload');
+  const playBtn = document.getElementById('playBtn');
+  const volume = document.getElementById('volume');
+  const loopToggle = document.getElementById('loopToggle');
+
+  uploadInput.addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    audio.src = URL.createObjectURL(file);
+    audio.loop = loopToggle.checked;
+    playBtn.disabled = false;
+  });
+
+  playBtn.addEventListener('click', () => {
+    if (audio.paused) {
+      audio.play();
+      playBtn.textContent = '⏸ Pause Music';
+    } else {
+      audio.pause();
+      playBtn.textContent = '▶ Play Music';
+    }
+  });
+
+  volume.addEventListener('input', () => {
+    audio.volume = volume.value;
+  });
+
+  loopToggle.addEventListener('change', () => {
+    audio.loop = loopToggle.checked;
+  });
+
+
+  const menu = document.getElementById('menu');
+  document.getElementById('menuBtn').onclick = () => menu.classList.toggle('open');
+</script>
+</body>
+</html>
