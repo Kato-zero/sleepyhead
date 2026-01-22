@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Dreamy Bounce & Drift | Kids Sleep Aid App</title>
 
   <!-- SEO Meta Tags -->
@@ -28,28 +28,44 @@
       --accent: #b9a6ff;
       --ball: #cbb7ff;
       --text: #eef;
+      --ball-size: min(80px, 20vw);
+      --counter-size: clamp(2rem, 8vw, 3rem);
     }
 
-    * { box-sizing: border-box; }
+    * { 
+      box-sizing: border-box; 
+      -webkit-tap-highlight-color: transparent;
+    }
 
-    body {
+    html, body {
       margin: 0;
-      background: radial-gradient(circle at top, #0b1a4a, var(--bg));
-      color: var(--text);
-      font-family: 'Comic Sans MS', 'Trebuchet MS', system-ui, sans-serif;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      touch-action: manipulation;
       overflow: hidden;
     }
 
+    body {
+      background: radial-gradient(circle at top, #0b1a4a, var(--bg));
+      color: var(--text);
+      font-family: 'Comic Sans MS', 'Trebuchet MS', system-ui, sans-serif;
+      overscroll-behavior: none;
+    }
+
     #app {
-      width: 100vw;
-      height: 100vh;
-      position: relative;
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      overflow: hidden;
     }
 
     .star {
       position: absolute;
-      width: 12px;
-      height: 12px;
+      width: clamp(6px, 2vw, 12px);
+      height: clamp(6px, 2vw, 12px);
       background: white;
       opacity: 1;
       animation: twinkle 1s infinite ease-in-out;
@@ -63,133 +79,526 @@
 
     .ball {
       position: absolute;
-      width: 80px;
-      height: 80px;
+      width: var(--ball-size);
+      height: var(--ball-size);
       border-radius: 50%;
       background: radial-gradient(circle, white, var(--ball));
-      box-shadow: 0 0 40px var(--ball);
+      box-shadow: 0 0 min(40px, 10vw) var(--ball);
+      pointer-events: none;
+      transform-origin: center center;
     }
 
     #counter {
       position: absolute;
-      top: 20px;
-      right: 30px;
-      font-size: 3rem;
+      top: max(20px, 5vh);
+      right: max(30px, 3vw);
+      font-size: var(--counter-size);
       opacity: 0.8;
+      text-shadow: 0 0 10px rgba(185, 166, 255, 0.5);
+      pointer-events: auto;
+      z-index: 100;
     }
 
     #menuBtn {
       position: absolute;
-      top: 20px;
-      left: 20px;
-      font-size: 2rem;
+      top: max(20px, 5vh);
+      left: max(20px, 3vw);
+      font-size: clamp(1.5rem, 6vw, 2rem);
       cursor: pointer;
+      background: rgba(185, 166, 255, 0.1);
+      border: 2px solid var(--accent);
+      border-radius: 50%;
+      width: clamp(40px, 10vw, 50px);
+      height: clamp(40px, 10vw, 50px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      transition: all 0.3s ease;
+      pointer-events: auto;
+    }
+
+    #menuBtn:hover, #menuBtn:active {
+      background: rgba(185, 166, 255, 0.2);
+      transform: scale(1.1);
     }
 
     #menu {
-      position: absolute;
+      position: fixed;
       top: 0;
-      left: -320px;
-      width: 300px;
+      left: -100%;
+      width: min(350px, 90vw);
       height: 100%;
-      background: rgba(5,10,40,0.95);
-      padding: 20px;
-      transition: left 0.4s ease;
+      background: rgba(5, 10, 40, 0.98);
+      padding: max(20px, 5vh) max(20px, 3vw);
+      transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       overflow-y: auto;
+      z-index: 1001;
+      pointer-events: auto;
+      backdrop-filter: blur(10px);
     }
 
-    #menu.open { left: 0; }
+    #menu.open { 
+      left: 0;
+      box-shadow: 5px 0 25px rgba(0, 0, 0, 0.5);
+    }
 
-    label { display:block; margin-top:1rem; font-size:0.9rem; }
+    #menu h2 {
+      margin-top: 0;
+      font-size: clamp(1.5rem, 5vw, 1.8rem);
+      color: var(--accent);
+      border-bottom: 2px solid var(--accent);
+      padding-bottom: 10px;
+    }
 
-    input, button {
+    label { 
+      display: block; 
+      margin-top: 1.5rem; 
+      font-size: clamp(0.9rem, 3vw, 1rem); 
+      color: #ccd;
+    }
+
+    input[type="range"] {
       width: 100%;
-      margin-top: 0.4rem;
+      margin: 10px 0;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 8px;
+      background: rgba(185, 166, 255, 0.2);
+      border-radius: 4px;
+      outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      background: var(--accent);
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      background: var(--accent);
+      border-radius: 50%;
+      cursor: pointer;
+      border: none;
+    }
+
+    /* Enhanced File Upload Styling */
+    .file-upload-container {
+      position: relative;
+      width: 100%;
+      margin: 10px 0;
+    }
+
+    .file-upload-label {
+      display: block;
+      padding: 20px;
+      background: rgba(185, 166, 255, 0.1);
+      border: 2px dashed var(--accent);
+      border-radius: 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: #ccd;
+    }
+
+    .file-upload-label:hover {
+      background: rgba(185, 166, 255, 0.2);
+      border-color: #d0c2ff;
+      transform: translateY(-2px);
+    }
+
+    .file-upload-label i {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      display: block;
+      color: var(--accent);
+    }
+
+    .file-upload-label span {
+      font-size: 1rem;
+      display: block;
+      margin-top: 5px;
+    }
+
+    .file-upload-label small {
+      font-size: 0.8rem;
+      opacity: 0.7;
+      display: block;
+      margin-top: 5px;
+    }
+
+    #audioUpload {
+      display: none;
+    }
+
+    .upload-progress {
+      display: none;
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 2px;
+      margin-top: 10px;
+      overflow: hidden;
+    }
+
+    .upload-progress-bar {
+      width: 0%;
+      height: 100%;
+      background: var(--accent);
+      transition: width 0.3s ease;
+    }
+
+    .upload-success {
+      display: none;
+      color: #4CAF50;
+      text-align: center;
+      padding: 10px;
+      background: rgba(76, 175, 80, 0.1);
+      border-radius: 8px;
+      margin-top: 10px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .current-track {
+      display: none;
+      background: rgba(185, 166, 255, 0.1);
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 15px;
+      border-left: 4px solid var(--accent);
+    }
+
+    .current-track-title {
+      font-weight: bold;
+      color: var(--accent);
+      margin-bottom: 5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .current-track-info {
+      font-size: 0.8rem;
+      opacity: 0.8;
+    }
+
+    input[type="checkbox"] {
+      margin-right: 10px;
+      transform: scale(1.2);
+      accent-color: var(--accent);
     }
 
     button {
-      padding: 8px;
+      width: 100%;
+      margin-top: 1rem;
+      padding: clamp(12px, 3vw, 15px);
       background: var(--accent);
+      color: var(--bg);
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       font-weight: bold;
+      font-size: clamp(1rem, 3vw, 1.1rem);
       cursor: pointer;
+      transition: all 0.3s ease;
+      letter-spacing: 0.5px;
+    }
+
+    button:hover, button:active {
+      background: #d0c2ff;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(185, 166, 255, 0.3);
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Playback Controls */
+    .playback-controls {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .playback-controls button {
+      flex: 1;
+      padding: 10px;
+      font-size: 0.9rem;
+    }
+
+    /* Menu Overlay */
+    .menu-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 1000;
+      pointer-events: auto;
+    }
+
+    .menu-overlay.active {
+      display: centeblocked;
+    }
+
+    /* Close button inside menu */
+    .close-menu {
+      display: none;
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 1.8rem;
+      color: var(--accent);
+      cursor: pointer;
+      background: none;
+      border: none;
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      z-index: 1002;
+    }
+
+    .close-menu:hover {
+      color: #d0c2ff;
+      transform: scale(1.1);
+    }
+
+    @media (max-width: 768px) {
+      .close-menu {
+        display: block;
+      }
+      
+      #menu {
+        padding-top: max(60px, 10vh);
+      }
+      
+      .ball {
+        width: min(70px, 18vw);
+        height: min(70px, 18vw);
+      }
+      
+      .playback-controls {
+        flex-direction: column;
+      }
+    }
+
+    @media (max-height: 500px) and (orientation: landscape) {
+      #menu {
+        width: min(400px, 70vw);
+      }
+      
+      #menu h2 {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+      }
+      
+      label {
+        margin-top: 0.8rem;
+      }
+      
+      button {
+        padding: 8px;
+      }
+    }
+
+    /* Audio visualization (optional) */
+    .audio-visualizer {
+      width: 100%;
+      height: 60px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      margin-top: 15px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .visualizer-bar {
+      position: absolute;
+      bottom: 0;
+      width: 4px;
+      background: var(--accent);
+      border-radius: 2px 2px 0 0;
+      transition: height 0.1s ease;
     }
   </style>
 </head>
 <body>
+<div class="menu-overlay" id="menuOverlay"></div>
 <div id="app">
   <div id="menuBtn">☰</div>
   <div id="counter">1</div>
 
   <div id="menu">
+    <button class="close-menu" id="closeMenuBtn">×</button>
     <h2>Settings</h2>
 
-    <label>Upload Your Music
+    <!-- Enhanced Music Upload Section -->
+    <label>Upload Your Music</label>
+    <div class="file-upload-container">
+      <label for="audioUpload" class="file-upload-label">
+        <i>🎵</i>
+        <span>Click to choose a music file</span>
+        <small>Supports: MP3, WAV, OGG, M4A</small>
+        <small>Max size: 50MB</small>
+      </label>
       <input type="file" id="audioUpload" accept="audio/*" />
-    </label>
+      <div class="upload-progress" id="uploadProgress">
+        <div class="upload-progress-bar" id="uploadProgressBar"></div>
+      </div>
+      <div class="upload-success" id="uploadSuccess">
+        ✅ Music uploaded successfully!
+      </div>
+    </div>
 
-    <button id="playBtn" disabled>▶ Play Music</button>
+    <!-- Current Track Info -->
+    <div class="current-track" id="currentTrack">
+      <div class="current-track-title" id="currentTrackTitle">No track loaded</div>
+      <div class="current-track-info" id="currentTrackInfo"></div>
+    </div>
 
+    <!-- Playback Controls -->
+    <div class="playback-controls">
+      <button id="playBtn" disabled>▶ Play</button>
+      <button id="stopBtn" disabled>⏹ Stop</button>
+    </div>
+
+    <!-- Audio Visualizer (Optional) -->
+    <div class="audio-visualizer" id="audioVisualizer"></div>
+
+    <!-- Volume Control -->
     <label>Volume
       <input type="range" min="0" max="1" step="0.05" id="volume" value="0.5" />
     </label>
 
+    <!-- Loop Toggle -->
     <label>
       <input type="checkbox" id="loopToggle" checked /> Loop music continuously
     </label>
+
+    <!-- Preset Sounds (Optional) -->
+    <label>Quick Sounds</label>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
+      <button class="preset-btn" data-sound="rain">🌧️ Rain</button>
+      <button class="preset-btn" data-sound="waves">🌊 Waves</button>
+      <button class="preset-btn" data-sound="wind">🍃 Wind</button>
+      <button class="preset-btn" data-sound="fire">🔥 Fireplace</button>
+    </div>
   </div>
 </div>
 
 <script>
-  for (let i = 0; i < 80; i++) {
+  // ========== RESPONSIVE SETUP ==========
+  const app = document.getElementById('app');
+  const counterEl = document.getElementById('counter');
+  const menu = document.getElementById('menu');
+  const menuBtn = document.getElementById('menuBtn');
+  const closeMenuBtn = document.getElementById('closeMenuBtn');
+  const menuOverlay = document.getElementById('menuOverlay');
+  
+  let screenWidth = window.innerWidth;
+  let screenHeight = window.innerHeight;
+  let ballSize = Math.min(80, screenWidth * 0.2);
+  let gravity = 0.35;
+  let bounceCount = 1;
+  let isMenuOpen = false;
+  
+  // ========== CREATE STARS ==========
+  const starCount = Math.floor((screenWidth * screenHeight) / 10000);
+  for (let i = 0; i < starCount; i++) {
     const s = document.createElement('div');
     s.className = 'star';
     s.style.left = Math.random() * 100 + '%';
     s.style.top = Math.random() * 100 + '%';
     s.style.animationDelay = Math.random() * 5 + 's';
+    s.style.width = (Math.random() * 6 + 4) + 'px';
+    s.style.height = s.style.width;
     document.body.appendChild(s);
   }
 
-  const app = document.getElementById('app');
-  const counterEl = document.getElementById('counter');
-  const gravity = 0.35;
-  let bounceCount = 1;
-
+  // ========== BALL PHYSICS FUNCTION ==========
   function createBall() {
     const ball = document.createElement('div');
     ball.className = 'ball';
     app.appendChild(ball);
 
-    let x = -100;
-    const ground = window.innerHeight - 80;
-    let y = ground - 250;
-    let vx = 1.6;
-    let vy = 13;
-    let bounces = 0;
+    const currentBallSize = Math.min(80, window.innerWidth * 0.2, window.innerHeight * 0.2);
+    ball.style.width = currentBallSize + 'px';
+    ball.style.height = currentBallSize + 'px';
+
+    const ground = window.innerHeight - currentBallSize;
     const maxBounces = 10;
+    const bounceHeight = Math.min(250, window.innerHeight * 0.4);
+    
+    let x = -currentBallSize;
+    let y = ground - bounceHeight;
+    
+    const baseVx = 1.6 * (screenWidth / 800);
+    const baseVy = 13 * (screenHeight / 800);
+    
+    let vx = baseVx;
+    let vy = -baseVy;
+    let bounces = 0;
+    let isActive = true;
 
     function animate() {
-      vy += gravity;
+      if (!isActive) return;
+      
+      const adjustedGravity = gravity * (screenHeight / 800);
+      vy += adjustedGravity;
+      
       x += vx;
       y += vy;
 
       if (y >= ground && bounces < maxBounces) {
         y = ground;
         vy *= -0.85;
+        vx *= 0.98;
+        
         bounces++;
         bounceCount++;
         counterEl.textContent = bounceCount;
+        
+        ball.style.boxShadow = `0 0 ${Math.min(40, currentBallSize * 0.5)}px var(--ball)`;
+        setTimeout(() => {
+          ball.style.boxShadow = `0 0 ${Math.min(20, currentBallSize * 0.25)}px var(--ball)`;
+        }, 100);
       }
 
       if (bounces >= maxBounces) {
         vy = 0;
+        vx *= 0.99;
         y = ground;
+        
+        if (Math.abs(vx) < 0.1) {
+          isActive = false;
+          setTimeout(() => {
+            if (ball.parentNode) {
+              ball.remove();
+              createBall();
+            }
+          }, 1000);
+        }
       }
 
       ball.style.transform = `translate(${x}px, ${y}px)`;
 
-      if (x > window.innerWidth + 120) {
+      if (x > window.innerWidth + currentBallSize) {
+        isActive = false;
         ball.remove();
         createBall();
         return;
@@ -201,42 +610,330 @@
     animate();
   }
 
-  createBall();
-
+  // ========== ENHANCED AUDIO SYSTEM ==========
   const audio = new Audio();
+  let audioContext;
+  let analyser;
+  let source;
+  let isAudioReady = false;
+  
+  // DOM Elements
   const uploadInput = document.getElementById('audioUpload');
   const playBtn = document.getElementById('playBtn');
+  const stopBtn = document.getElementById('stopBtn');
   const volume = document.getElementById('volume');
   const loopToggle = document.getElementById('loopToggle');
+  const uploadProgress = document.getElementById('uploadProgress');
+  const uploadProgressBar = document.getElementById('uploadProgressBar');
+  const uploadSuccess = document.getElementById('uploadSuccess');
+  const currentTrack = document.getElementById('currentTrack');
+  const currentTrackTitle = document.getElementById('currentTrackTitle');
+  const currentTrackInfo = document.getElementById('currentTrackInfo');
+  const audioVisualizer = document.getElementById('audioVisualizer');
+  const presetButtons = document.querySelectorAll('.preset-btn');
 
-  uploadInput.addEventListener('change', e => {
+  // Preset sounds (URLs to free ambient sounds)
+  const presetSounds = {
+    rain: 'https://assets.mixkit.co/music/preview/mixkit-rain-loop-1248.mp3',
+    waves: 'https://assets.mixkit.co/music/preview/mixkit-waves-loop-1250.mp3',
+    wind: 'https://assets.mixkit.co/music/preview/mixkit-wind-loop-1255.mp3',
+    fire: 'https://assets.mixkit.co/music/preview/mixkit-campfire-crackles-1233.mp3'
+  };
+
+  // ========== AUDIO VISUALIZER ==========
+  function initAudioVisualizer() {
+    if (!audioContext) {
+      audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      analyser = audioContext.createAnalyser();
+      analyser.fftSize = 256;
+      
+      // Create visualizer bars
+      const bufferLength = analyser.frequencyBinCount;
+      const dataArray = new Uint8Array(bufferLength);
+      
+      // Clear existing bars
+      audioVisualizer.innerHTML = '';
+      
+      // Create bars
+      const barWidth = audioVisualizer.offsetWidth / bufferLength;
+      for (let i = 0; i < bufferLength; i++) {
+        const bar = document.createElement('div');
+        bar.className = 'visualizer-bar';
+        bar.style.left = `${i * barWidth}px`;
+        bar.style.width = `${barWidth - 1}px`;
+        audioVisualizer.appendChild(bar);
+      }
+      
+      function updateVisualizer() {
+        if (!analyser || audio.paused) return;
+        
+        analyser.getByteFrequencyData(dataArray);
+        const bars = audioVisualizer.querySelectorAll('.visualizer-bar');
+        
+        for (let i = 0; i < bars.length; i++) {
+          const value = dataArray[i];
+          const bar = bars[i];
+          const height = (value / 255) * 100;
+          bar.style.height = `${height}%`;
+          bar.style.opacity = height > 10 ? '0.8' : '0.3';
+        }
+        
+        requestAnimationFrame(updateVisualizer);
+      }
+      
+      updateVisualizer();
+    }
+  }
+
+  // ========== ENHANCED FILE UPLOAD ==========
+  uploadInput.addEventListener('change', async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    audio.src = URL.createObjectURL(file);
-    audio.loop = loopToggle.checked;
-    playBtn.disabled = false;
+
+    // Validate file type
+    const validTypes = ['audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/mp4', 'audio/x-m4a', 'audio/*'];
+    if (!validTypes.some(type => file.type.includes(type.replace('/*', '')))) {
+      alert('Please select a valid audio file (MP3, WAV, OGG, M4A)');
+      return;
+    }
+
+    // Validate file size (max 50MB)
+    if (file.size > 50 * 1024 * 1024) {
+      alert('File size too large. Maximum size is 50MB.');
+      return;
+    }
+
+    // Show upload progress
+    uploadProgress.style.display = 'block';
+    uploadProgressBar.style.width = '0%';
+    
+    // Simulate upload progress
+    let progress = 0;
+    const progressInterval = setInterval(() => {
+      progress += 5;
+      uploadProgressBar.style.width = `${progress}%`;
+      if (progress >= 100) {
+        clearInterval(progressInterval);
+        processAudioFile(file);
+      }
+    }, 50);
   });
 
-  playBtn.addEventListener('click', () => {
-    if (audio.paused) {
-      audio.play();
-      playBtn.textContent = '⏸ Pause Music';
-    } else {
-      audio.pause();
-      playBtn.textContent = '▶ Play Music';
+  function processAudioFile(file) {
+    // Create object URL
+    const objectUrl = URL.createObjectURL(file);
+    
+    // Set audio source
+    audio.src = objectUrl;
+    audio.loop = loopToggle.checked;
+    
+    // Update UI
+    uploadProgress.style.display = 'none';
+    uploadSuccess.style.display = 'block';
+    currentTrack.style.display = 'block';
+    currentTrackTitle.textContent = file.name;
+    currentTrackInfo.textContent = `${formatFileSize(file.size)} • ${file.type.split('/')[1].toUpperCase()}`;
+    
+    // Enable buttons
+    playBtn.disabled = false;
+    stopBtn.disabled = false;
+    isAudioReady = true;
+    
+    // Initialize visualizer
+    initAudioVisualizer();
+    
+    // Setup audio context connection
+    audio.addEventListener('canplay', () => {
+      if (audioContext && source) {
+        source.disconnect();
+      }
+      
+      if (audioContext) {
+        source = audioContext.createMediaElementSource(audio);
+        source.connect(analyser);
+        analyser.connect(audioContext.destination);
+      }
+    });
+    
+    // Auto-hide success message after 3 seconds
+    setTimeout(() => {
+      uploadSuccess.style.display = 'none';
+    }, 3000);
+    
+    console.log('Audio file loaded:', file.name);
+  }
+
+  function formatFileSize(bytes) {
+    if (bytes < 1024) return bytes + ' bytes';
+    else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+    else return (bytes / 1048576).toFixed(1) + ' MB';
+  }
+
+  // ========== PLAYBACK CONTROLS ==========
+  playBtn.addEventListener('click', async (e) => {
+    e.stopPropagation();
+    
+    if (!isAudioReady) {
+      alert('Please upload a music file first');
+      return;
+    }
+    
+    try {
+      if (audio.paused) {
+        // Resume or create audio context if needed
+        if (audioContext && audioContext.state === 'suspended') {
+          await audioContext.resume();
+        }
+        
+        await audio.play();
+        playBtn.textContent = '⏸ Pause';
+        playBtn.style.background = '#ff9e6d';
+        
+        // Start visualizer
+        initAudioVisualizer();
+      } else {
+        audio.pause();
+        playBtn.textContent = '▶ Play';
+        playBtn.style.background = '';
+      }
+    } catch (error) {
+      console.error('Playback error:', error);
+      alert('Could not play audio. Please try another file.');
     }
   });
 
+  stopBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    
+    if (isAudioReady) {
+      audio.pause();
+      audio.currentTime = 0;
+      playBtn.textContent = '▶ Play';
+      playBtn.style.background = '';
+    }
+  });
+
+  // Volume control
   volume.addEventListener('input', () => {
     audio.volume = volume.value;
   });
 
+  // Loop toggle
   loopToggle.addEventListener('change', () => {
     audio.loop = loopToggle.checked;
   });
 
-  const menu = document.getElementById('menu');
-  document.getElementById('menuBtn').onclick = () => menu.classList.toggle('open');
+  // ========== PRESET SOUNDS ==========
+  presetButtons.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const soundType = btn.dataset.sound;
+      
+      if (presetSounds[soundType]) {
+        // Update UI
+        currentTrack.style.display = 'block';
+        currentTrackTitle.textContent = btn.textContent;
+        currentTrackInfo.textContent = 'Preset sound • Ready to play';
+        
+        // Load preset sound
+        audio.src = presetSounds[soundType];
+        audio.loop = loopToggle.checked;
+        isAudioReady = true;
+        playBtn.disabled = false;
+        stopBtn.disabled = false;
+        
+        // Initialize visualizer
+        initAudioVisualizer();
+        
+        // Auto-play (with user gesture requirement)
+        if (audioContext && audioContext.state === 'suspended') {
+          audioContext.resume();
+        }
+        
+        console.log('Loaded preset:', soundType);
+      }
+    });
+  });
+
+  // ========== MENU CONTROLS ==========
+  function openMenu() {
+    isMenuOpen = true;
+    menu.classList.add('open');
+    menuOverlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeMenu() {
+    isMenuOpen = false;
+    menu.classList.remove('open');
+    menuOverlay.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  menuBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (isMenuOpen) {
+      closeMenu();
+    } else {
+      openMenu();
+    }
+  });
+
+  closeMenuBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    closeMenu();
+  });
+
+  menuOverlay.addEventListener('click', (e) => {
+    if (e.target === menuOverlay) {
+      closeMenu();
+    }
+  });
+
+  menu.addEventListener('click', (e) => {
+    e.stopPropagation();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && isMenuOpen) {
+      closeMenu();
+    }
+    // Spacebar to play/pause when menu is closed
+    if (e.key === ' ' && !isMenuOpen && isAudioReady) {
+      e.preventDefault();
+      playBtn.click();
+    }
+  });
+
+  // ========== INITIALIZE ==========
+  setTimeout(() => {
+    createBall();
+  }, 500);
+
+  if (screenWidth > 1024) {
+    setTimeout(() => createBall(), 1500);
+    setTimeout(() => createBall(), 2500);
+  }
+
+  // Initialize audio context on first user interaction
+  document.addEventListener('click', () => {
+    if (!audioContext) {
+      audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      analyser = audioContext.createAnalyser();
+      analyser.fftSize = 256;
+    }
+  }, { once: true });
+
+  // Responsive resize handler
+  window.addEventListener('resize', () => {
+    screenWidth = window.innerWidth;
+    screenHeight = window.innerHeight;
+  });
+
+  // Prevent context menu
+  document.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+  });
 </script>
 </body>
 </html>
